@@ -1,0 +1,25 @@
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/swiperefreshlayout"
+    tools:context="com.sci.wumu.wukong.ShopFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+
+
+        <WebView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/shopwebview">
+
+
+
+        </WebView>
+
+
+
+
+</android.support.v4.widget.SwipeRefreshLayout>
