@@ -29,7 +29,7 @@ public class FirstActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
-        halfmonth();
+       // halfmonth();
         //mayRequestLocation();
         getHomeActivity();
 
@@ -126,7 +126,8 @@ public class FirstActivity extends AppCompatActivity {
             long lasttime = preferences.getLong("lasttime",currenttime);
             if(currenttime>=lasttime) {
                 long betweentime = currenttime - lasttime;
-                long betweendate = (int)(betweentime/1000/3600/24);
+               long betweendate = (int)(betweentime/1000/3600/24);
+               // long betweendate = (int)(betweentime/1000/4);
                 if(betweendate>15)
                 {
                     nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);

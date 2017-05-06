@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -44,7 +45,7 @@ public class wholeActivity extends AppCompatActivity implements View.OnClickList
     private BluetoothAdapter mBluetoothAdapter;
     private static final String TAG = "MainActivity";
 
-
+    private long clickTime = 0; // 第一次点击的时间
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,6 +189,29 @@ public class wholeActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+//    @Override
+//    public void onBackPressed() {
+//        exit();
+//    }
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        // 是否触发按键为back键
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            onBackPressed();
+//            return true;
+//        } else { // 如果不是back键正常响应
+//            return super.onKeyDown(keyCode, event);
+//        }
+//    }
+//    private void exit() {
+//        if ((System.currentTimeMillis() - clickTime) > 2000) {
+//            Toast.makeText(this, "再按一次后退键退出程序", Toast.LENGTH_SHORT).show();
+//            clickTime = System.currentTimeMillis();
+//        } else {
+//            this.finish();
+//        }
+//    }
+
 
     @Override
     protected void onResume() {
@@ -210,9 +234,11 @@ public class wholeActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onDestroy() {
+        bleManager.closeBluetoothGatt();
         super.onDestroy();
 
     }
+
 
 
 

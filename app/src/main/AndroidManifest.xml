@@ -41,7 +41,8 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="767ccfc91fd380d2e392854c835e1142"/>
-        <activity android:name=".FirstActivity">
+        <activity android:name=".FirstActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,7 +51,9 @@
         </activity>
         <activity
             android:name=".wholeActivity"
-            android:label="@string/title_activity_whole"></activity>
+            android:label="@string/title_activity_whole"
+            android:screenOrientation="portrait"
+            ></activity>
     </application>
 
 </manifest>

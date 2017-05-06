@@ -144,30 +144,36 @@ public class EnterFragment extends Fragment {
             //}
             //unit.setText(m_byte[3]+"");
             byte[] bytes = m_byte;
-            dianliangzhi.setText(bytes[3]+"%");
-            if (bytes[3] > 90)
-                dianliangview.setImageResource(R.drawable.bar10);
-            else if (bytes[3] > 80)
-                dianliangview.setImageResource(R.drawable.bar9);
-            else if (bytes[3] > 70)
-                dianliangview.setImageResource(R.drawable.bar8);
-            else if (bytes[3] > 60)
-                dianliangview.setImageResource(R.drawable.bar7);
-            else if (bytes[3] > 50)
-                dianliangview.setImageResource(R.drawable.bar6);
-            else if (bytes[3] > 40)
-                dianliangview.setImageResource(R.drawable.bar5);
-            else if (bytes[3] > 30)
-                dianliangview.setImageResource(R.drawable.bar4);
-            else if (bytes[3] > 20)
-                dianliangview.setImageResource(R.drawable.bar3);
-            else if (bytes[3] > 10)
-                dianliangview.setImageResource(R.drawable.bar3);
-            else if (bytes[3] > 0)
-                dianliangview.setImageResource(R.drawable.bar2);
-            else if (bytes[3] == 0)
-                dianliangview.setImageResource(R.drawable.bar1);
-
+            if(bytes[3] >= 0  && bytes[3] <= 100)
+            {
+                dianliangzhi.setText(bytes[3] + "%");
+                if (bytes[3] > 90)
+                    dianliangview.setImageResource(R.drawable.bar10);
+                else if (bytes[3] > 80)
+                    dianliangview.setImageResource(R.drawable.bar9);
+                else if (bytes[3] > 70)
+                    dianliangview.setImageResource(R.drawable.bar8);
+                else if (bytes[3] > 60)
+                    dianliangview.setImageResource(R.drawable.bar7);
+                else if (bytes[3] > 50)
+                    dianliangview.setImageResource(R.drawable.bar6);
+                else if (bytes[3] > 40)
+                    dianliangview.setImageResource(R.drawable.bar5);
+                else if (bytes[3] > 30)
+                    dianliangview.setImageResource(R.drawable.bar4);
+                else if (bytes[3] > 20)
+                    dianliangview.setImageResource(R.drawable.bar3);
+                else if (bytes[3] > 10)
+                    dianliangview.setImageResource(R.drawable.bar3);
+                else if (bytes[3] > 0)
+                    dianliangview.setImageResource(R.drawable.bar2);
+                else if (bytes[3] == 0)
+                    dianliangview.setImageResource(R.drawable.bar1);
+            }
+            else
+            {
+                Toast.makeText(getActivity(), "发送的数据格式不对", Toast.LENGTH_LONG).show();
+            }
         }
     };
 
@@ -199,10 +205,13 @@ public class EnterFragment extends Fragment {
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
     private ImageView imageViewblu;
-    private String mac;
+    //private String mac;
 
     int leden = 0;
     Switch switchled;
+    boolean isconnected = false;
+
+
 
     TextView fengsutext;
     TextView dianliangzhi;
@@ -699,6 +708,10 @@ public class EnterFragment extends Fragment {
         }
     }
 
+
+
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -711,6 +724,7 @@ public class EnterFragment extends Fragment {
 
         super.onResume();
         scanDevice();
+        //connectNameDevice(lockName);
 
 
     }
@@ -729,7 +743,7 @@ public class EnterFragment extends Fragment {
         if (wholeActivity.bleManager.isInScanning())
             return;
 
-        wholeActivity.bleManager.scanDevice(new ListScanCallback(3000) {
+        wholeActivity.bleManager.scanDevice(new ListScanCallback(5000) {
             @Override
             public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
                 super.onLeScan(device, rssi, scanRecord);
@@ -737,21 +751,37 @@ public class EnterFragment extends Fragment {
             }
 
             @Override
+            public void onScanTimeout() {
+                Toast.makeText(getActivity(), "扫描完", Toast.LENGTH_LONG).show();
+                super.onScanTimeout();
+            }
+
+            @Override
             public void onDeviceFound(BluetoothDevice[] devices) {
                // location.setText(devices.length+"");
+                boolean scanen = false;
                 for (int i = 0; devices != null && i < devices.length; i++) {
                     //location.setText(devices[i].getAddress());
                     if ((devices[i].getName()).equals(lockName)) {
                        // location.setText(devices[i].getAddress());
+                        scanen = true;
                         connectSpecialDevice(devices[i]);
 
+
                     }
+                }
+                if(!scanen && !isconnected)
+                {
+                    Toast.makeText(getActivity(), "没有发现设备，请检查", Toast.LENGTH_LONG).show();
+                    scanDevice();
                 }
 
             }
 
         });
     }
+
+
 
     /**
      * 连接设备
@@ -762,7 +792,7 @@ public class EnterFragment extends Fragment {
             @Override
             public void onNotFoundDevice() {
                 //scanDevice();
-                Toast.makeText(getActivity(), "onNotFoundDevice", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "没有发现设备", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -771,10 +801,24 @@ public class EnterFragment extends Fragment {
                     @Override
                     public void run() {
                        // location.setText(gatt.getDevice().getAddress());
-                        mac = gatt.getDevice().getAddress();
+                        //mac = gatt.getDevice().getAddress();
                         en_fengshu = 1;
                         imageViewblu.setImageResource(R.drawable.blueen);
                         textblue.setText("连接中");
+                        isconnected= true;
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(),
+                                "FE0800000000000000000002EF");
+                                //fengsutext.setText("0%");
+                                //seekBar.setProgress(0);
+
+                               // switchled.setSelected(false);
+                            }
+
+                        },1800);
+
                     }
                 });
                 gatt.discoverServices();
@@ -789,10 +833,10 @@ public class EnterFragment extends Fragment {
                         switch (newState)
                         {
                             case BluetoothGatt.STATE_DISCONNECTED:
-                                imageViewblu.setImageResource(R.drawable.bluedis);
-                                textblue.setText("未连接");
-                                en_fengshu = 0;
-                                break;
+//                                imageViewblu.setImageResource(R.drawable.bluedis);
+//                                textblue.setText("未连接");
+//                                en_fengshu = 0;
+//                                break;
                             case BluetoothGatt.STATE_DISCONNECTING:
                                 //imageViewblu.setImageResource(R.drawable.bluedis);
                                 //textblue.setText("未连接");
@@ -831,6 +875,11 @@ public class EnterFragment extends Fragment {
                         imageViewblu.setImageResource(R.drawable.bluedis);
                         textblue.setText("未连接");
                         en_fengshu = 0;
+                        isconnected = false;
+                        seekBar.setProgress(0);
+                        fengsutext.setText("0%");
+                        switchled.setSelected(false);
+
 
                     }
                 });
@@ -872,10 +921,16 @@ public class EnterFragment extends Fragment {
                                 //接收到应答
                                 //byte[] data
                                  m_byte =characteristic.getValue();
-                                if(m_byte.length == 12) {
-                                    //m_byte = data;
-                                    //location.setText("he"+m_byte[3]);
-                                    dianyuanshezhi.post(dianyuanupdate);
+                               if(m_byte.length == 13) {
+//                                    if(m_byte[0] == 254 && m_byte[1] == 8 ) {
+                                        //m_byte = data;
+                                        //location.setText("he"+m_byte[3]);
+                                        dianyuanshezhi.post(dianyuanupdate);
+//                                        Toast.makeText(getActivity(), m_byte[0]+m_byte[1]
+//                                                +m_byte[2]+m_byte[3]+m_byte[4]+m_byte[4]+"", Toast.LENGTH_LONG).show();
+                                //Toast.makeText(getActivity(), m_byte.length+"", Toast.LENGTH_LONG).show();
+
+//                                    }
                                 }
                             }
                         });
@@ -883,6 +938,7 @@ public class EnterFragment extends Fragment {
 
                     @Override
                     public void onFailure(BleException exception) {
+
                         wholeActivity.bleManager.handleException(exception);
                     }
                 });
