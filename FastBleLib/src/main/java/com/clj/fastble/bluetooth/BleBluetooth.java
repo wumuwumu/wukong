@@ -150,7 +150,7 @@ public class BleBluetooth {
             }
             return false;
         }
-        return startLeScan(new NameScanCallback(name, time_out) {
+        return startLeScan(new NameScanCallback(name, time_out, false) {
 
             @Override
             public void onDeviceFound(final BluetoothDevice device, int rssi, byte[] scanRecord) {
@@ -198,6 +198,38 @@ public class BleBluetooth {
             }
         });
     }
+
+    public boolean fuzzySearchNameAndConnect(String name, long time_out, final boolean autoConnect, final BleGattCallback callback) {
+        if (TextUtils.isEmpty(name)) {
+            if (callback != null) {
+                callback.onNotFoundDevice();
+            }
+            return false;
+        }
+        return startLeScan(new NameScanCallback(name, time_out, true) {
+
+            @Override
+            public void onDeviceFound(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+                if (callback != null) {
+                    callback.onFoundDevice(device);
+                }
+                runOnMainThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        connect(device, autoConnect, callback);
+                    }
+                });
+            }
+
+            @Override
+            public void onDeviceNotFound() {
+                if (callback != null) {
+                    callback.onNotFoundDevice();
+                }
+            }
+        });
+    }
+
 
     public boolean refreshDeviceCache() {
         try {
@@ -269,15 +301,6 @@ public class BleBluetooth {
         return bluetoothGatt;
     }
 
-
-    /**
-     * return
-     * {@link #STATE_DISCONNECTED}
-     * {@link #STATE_SCANNING}
-     * {@link #STATE_CONNECTING}
-     * {@link #STATE_CONNECTED}
-     * {@link #STATE_SERVICES_DISCOVERED}
-     */
     public int getConnectionState() {
         return connectionState;
     }
@@ -287,16 +310,11 @@ public class BleBluetooth {
         @Override
         public void onNotFoundDevice() {
             BleLog.i("coreGattCallback：onNotFoundDevice ");
+        }
 
-            bluetoothGatt = null;
-            Iterator iterator = callbackHashMap.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry entry = (Map.Entry) iterator.next();
-                Object call = entry.getValue();
-                if (call instanceof BleGattCallback) {
-                    ((BleGattCallback) call).onNotFoundDevice();
-                }
-            }
+        @Override
+        public void onFoundDevice(BluetoothDevice device) {
+            BleLog.i("coreGattCallback：onFoundDevice ");
         }
 
         @Override

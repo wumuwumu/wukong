@@ -56,12 +56,11 @@ import java.util.UUID;
 import static android.content.ContentValues.TAG;
 
 
-public class EnterFragment extends Fragment {
+public class EnterFragment extends Fragment implements View.OnClickListener{
 
 
     private ViewPager viewPager;
     private ArrayList<View> pageview;
-
 
 
     View view;
@@ -104,13 +103,15 @@ public class EnterFragment extends Fragment {
     TextView thousand;
     TextView myriabit;
     TextView shiwan;
+    TextView baiwang;
     TextView textblue;
     ImageView dianliangview;
 
     ImageView weatherzhuangkuang;
     TextView tixing;
     int fengshu = 0;
-    int zonggongug = 0;
+    int fengsusave = 0;
+    boolean boolswen;
     int en_fengshu = 0;
     String hexData;
 
@@ -118,7 +119,9 @@ public class EnterFragment extends Fragment {
     TextView dengji2;
     byte[] m_byte;
 
-    ImageButton fenxiang;
+//    ImageButton fenxiang;
+    ImageButton imagebtn_allsw;
+    boolean imagebtn_allen = false;
 
     private Timer mTimer = new Timer();
     private TimerTask mtimerTask;
@@ -133,68 +136,45 @@ public class EnterFragment extends Fragment {
 
         @Override
         public void run() {
-            //String message = hexData;
-            //int len = message.length() / 2;
-            //char[] chars = message.toCharArray();
-            //String[] hexStr = new String[len];
-           // int[] bytes = new int[len];
-           // for (int i = 0, j = 0; j < len; i += 2, j++) {
-            //    hexStr[j] = "" + chars[i] + chars[i + 1];
-            //    bytes[j] = (int) Integer.parseInt(hexStr[j], 16);
-            //}
-            //unit.setText(m_byte[3]+"");
+            sync();
             byte[] bytes = m_byte;
-            if(bytes[3] >= 0  && bytes[3] <= 100)
-            {
-                dianliangzhi.setText(bytes[3] + "%");
-                if (bytes[3] > 90)
+            if (bytes[3] >= 0 && bytes[3] <= 100) {
+//                dianliangzhi.setText(bytes[3] + "%");
+                if (bytes[3] > 70)
                     dianliangview.setImageResource(R.drawable.bar10);
-                else if (bytes[3] > 80)
-                    dianliangview.setImageResource(R.drawable.bar9);
-                else if (bytes[3] > 70)
-                    dianliangview.setImageResource(R.drawable.bar8);
-                else if (bytes[3] > 60)
-                    dianliangview.setImageResource(R.drawable.bar7);
                 else if (bytes[3] > 50)
-                    dianliangview.setImageResource(R.drawable.bar6);
-                else if (bytes[3] > 40)
-                    dianliangview.setImageResource(R.drawable.bar5);
+                    dianliangview.setImageResource(R.drawable.bar8);
                 else if (bytes[3] > 30)
-                    dianliangview.setImageResource(R.drawable.bar4);
-                else if (bytes[3] > 20)
-                    dianliangview.setImageResource(R.drawable.bar3);
+                    dianliangview.setImageResource(R.drawable.bar6);
                 else if (bytes[3] > 10)
-                    dianliangview.setImageResource(R.drawable.bar3);
+                    dianliangview.setImageResource(R.drawable.bar4);
                 else if (bytes[3] > 0)
                     dianliangview.setImageResource(R.drawable.bar2);
                 else if (bytes[3] == 0)
                     dianliangview.setImageResource(R.drawable.bar1);
-            }
-            else
-            {
+            } else {
                 Toast.makeText(getActivity(), "发送的数据格式不对", Toast.LENGTH_LONG).show();
             }
+
         }
     };
 
-    final  Runnable  runnablesendinfo = new Runnable() {
+    final Runnable runnablesendinfo = new Runnable() {
         @Override
         public void run() {
             String str;
-            if(fengshu<16)
-            {
-                str= "FE"+"08"+"0"+Integer.toHexString(leden) +"0"+Integer.toHexString(fengshu)+
-                        "00"+"00"+"00"+"00"+"00"+"00"+"00"+"02"+"EF";
-            }else
-            {
-                str = "FE"+"08"+"0"+ Integer.toHexString(leden)+Integer.toHexString(fengshu)+
-                        "00"+"00"+"00"+"00"+"00"+"00"+"00"+"02"+"EF";
+            if (fengshu < 16) {
+                str = "FE" + "08" + "0" + Integer.toHexString(leden) + "0" + Integer.toHexString(fengshu) +
+                        "00" + "00" + "00" + "00" + "00" + "00" + "00" + "02" + "EF";
+            } else {
+                str = "FE" + "08" + "0" + Integer.toHexString(leden) + Integer.toHexString(fengshu) +
+                        "00" + "00" + "00" + "00" + "00" + "00" + "00" + "02" + "EF";
             }
 
 
             startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(), str);
 
-            fengsutext.setText(fengshu+"%");
+            fengsutext.setText(fengshu + "%");
 
         }
     };
@@ -205,16 +185,16 @@ public class EnterFragment extends Fragment {
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
     private ImageView imageViewblu;
+    private LinearLayout linearbluen;
     //private String mac;
 
     int leden = 0;
     Switch switchled;
     boolean isconnected = false;
-
-
+    boolean scanen = false;
 
     TextView fengsutext;
-    TextView dianliangzhi;
+//    TextView dianliangzhi;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -225,7 +205,6 @@ public class EnterFragment extends Fragment {
 
         fragment_gather = inflater.inflate(R.layout.fragment_gather, null);
         fragment_weather = inflater.inflate(R.layout.fragment_weather, null);
-
 
 
         pageview = new ArrayList<View>();
@@ -263,6 +242,7 @@ public class EnterFragment extends Fragment {
         viewPager.setCurrentItem(0);
 
         init();
+        initevent();
         location();
 
         BluetoothManager bluetoothManager = (BluetoothManager) getActivity()
@@ -271,6 +251,12 @@ public class EnterFragment extends Fragment {
 
 
         return view;
+
+    }
+
+    private void initevent() {
+        linearbluen.setOnClickListener(this);
+        imagebtn_allsw.setOnClickListener(this);
 
     }
 
@@ -290,18 +276,20 @@ public class EnterFragment extends Fragment {
         imageViewblu = (ImageView) fragment_gather.findViewById(R.id.imageViewblu);
         textblue = (TextView) fragment_gather.findViewById(R.id.bluetext);
         seekBar = (SeekBar) fragment_weather.findViewById(R.id.seekbar_wea);
-        fengsutext = (TextView)fragment_weather.findViewById(R.id.fengsuzhi) ;
-        switchled = (Switch)fragment_weather.findViewById(R.id.switchled);
-        weatherzhuangkuang = (ImageView)fragment_weather.findViewById(R.id.tianqi);
-        dianliangzhi = (TextView)fragment_weather.findViewById(R.id.dianliangzhi);
-        tixing = (TextView)fragment_gather.findViewById(R.id.tixing);
+        fengsutext = (TextView) fragment_weather.findViewById(R.id.fengsuzhi);
+        switchled = (Switch) fragment_weather.findViewById(R.id.switchled);
+        weatherzhuangkuang = (ImageView) fragment_weather.findViewById(R.id.tianqi);
+//        dianliangzhi = (TextView) fragment_weather.findViewById(R.id.dianliangzhi);
+        tixing = (TextView) fragment_gather.findViewById(R.id.tixing);
         unit = (TextView) fragment_gather.findViewById(R.id.unit);
         decade = (TextView) fragment_gather.findViewById(R.id.decade);
         hundred = (TextView) fragment_gather.findViewById(R.id.hundred);
         thousand = (TextView) fragment_gather.findViewById(R.id.thousand);
         myriabit = (TextView) fragment_gather.findViewById(R.id.myriabit);
         shiwan = (TextView) fragment_gather.findViewById(R.id.shiwan);
-        fenxiang = (ImageButton)fragment_gather.findViewById(R.id.tuisong);
+//        fenxiang = (ImageButton) fragment_gather.findViewById(R.id.tuisong);
+        imagebtn_allsw = (ImageButton)fragment_gather.findViewById(R.id.imagebtn_allswitch);
+        linearbluen = (LinearLayout)fragment_gather.findViewById(R.id.linear_blu_en);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -342,43 +330,41 @@ public class EnterFragment extends Fragment {
                         + Integer.parseInt("FF", 16) + Integer.parseInt("FF", 16)
                         + Integer.parseInt("FF", 16);
                 String str;
-                if(fengshu<16)
-                {
-                    str= "FE"+"08"+"0"+ Integer.toHexString(leden)+"0"+Integer.toHexString(fengshu)+
-                            "00"+"00"+"00"+"00"+"00"+"00"+"00"+"02"+"EF";
-                }else
-                {
-                    str = "FE"+"08"+"0"+ Integer.toHexString(leden) +Integer.toHexString(fengshu)+
-                            "00"+"00"+"00"+"00"+"00"+"00"+"00"+"02"+"EF";
+                if (fengshu < 16) {
+                    str = "FE" + "08" + "0" + Integer.toHexString(leden) + "0" + Integer.toHexString(fengshu) +
+                            "00" + "00" + "00" + "00" + "00" + "00" + "00" + "02" + "EF";
+                } else {
+                    str = "FE" + "08" + "0" + Integer.toHexString(leden) + Integer.toHexString(fengshu) +
+                            "00" + "00" + "00" + "00" + "00" + "00" + "00" + "02" + "EF";
                 }
 
 
                 startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(), str);
 
-                fengsutext.setText(fengshu+"%");
-               // sendinfo.post(runnablesendinfo);
+                fengsutext.setText(fengshu + "");
+                // sendinfo.post(runnablesendinfo);
 
             }
         });
 
-        fenxiang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_SEND);
-                String fenxiangwenzi = "使用口罩过滤的微小尘埃为"+zonggongug+"ug";
-                intent.putExtra(Intent.EXTRA_TEXT, fenxiangwenzi);
-                intent.setType("text/plain");
-                //设置分享列表的标题，并且每次都显示分享列表
-                startActivity(Intent.createChooser(intent, "分享到"));
-
-            }
-        });
+//        fenxiang.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent();
+//                intent.setAction(Intent.ACTION_SEND);
+//                String fenxiangwenzi = "使用口罩过滤的微小尘埃为" + zonggongug + "ug";
+//                intent.putExtra(Intent.EXTRA_TEXT, fenxiangwenzi);
+//                intent.setType("text/plain");
+//                //设置分享列表的标题，并且每次都显示分享列表
+//                startActivity(Intent.createChooser(intent, "分享到"));
+//
+//            }
+//        });
 
         switchled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     leden = 1;
                     String str;
                     if (fengshu < 16) {
@@ -392,26 +378,22 @@ public class EnterFragment extends Fragment {
 
                     startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(), str);
 
-                    //fengsutext.setText(fengshu + "%");
-                }
-                else
-                {
-                    leden =0;
+                    fengsutext.setText(fengshu+"");
+                } else {
+                    leden = 0;
                     String str;
-                    if(fengshu<16)
-                    {
-                        str= "FE"+"08"+"0"+ Integer.toHexString(leden)+"0"+Integer.toHexString(fengshu)+
-                                "00"+"00"+"00"+"00"+"00"+"00"+"00"+"02"+"EF";
-                    }else
-                    {
-                        str = "FE"+"08"+"0"+ Integer.toHexString(leden) +Integer.toHexString(fengshu)+
-                                "00"+"00"+"00"+"00"+"00"+"00"+"00"+"02"+"EF";
+                    if (fengshu < 16) {
+                        str = "FE" + "08" + "0" + Integer.toHexString(leden) + "0" + Integer.toHexString(fengshu) +
+                                "00" + "00" + "00" + "00" + "00" + "00" + "00" + "02" + "EF";
+                    } else {
+                        str = "FE" + "08" + "0" + Integer.toHexString(leden) + Integer.toHexString(fengshu) +
+                                "00" + "00" + "00" + "00" + "00" + "00" + "00" + "02" + "EF";
                     }
 
 
                     startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(), str);
 
-                    //fengsutext.setText(fengshu+"%");
+                    fengsutext.setText(fengshu+"");
                 }
             }
         });
@@ -428,48 +410,56 @@ public class EnterFragment extends Fragment {
             }
         };
 
-        mTimer.schedule(mtimerTask, 0, 1000);
+        //mTimer.schedule(mtimerTask, 0, 1000);
 
     }
 
     private void sync() {
-        zonggongug += 0.06 * intaqi * fengshu * 0.01 * 0.9 * en_fengshu * 100;
-        int sum = zonggongug;
+
+        int sum = (m_byte[4]+m_byte[5]*100+m_byte[6]*10000+m_byte[7]*1000000+m_byte[8]*100000000)*intaqi/100000;
         int key = 1;
-        while (sum > 0) {
-            switch (key) {
-                case 1:
-                    unit.setText(sum % 10 + "");
-                    sum = (int) sum / 10;
-                    key++;
-                    break;
-                case 2:
-                    decade.setText(sum % 10 + "");
-                    sum = (int) sum / 10;
-                    key++;
-                    break;
-                case 3:
-                    hundred.setText(sum % 10 + "");
-                    sum = (int) sum / 10;
-                    key++;
-                    break;
-                case 4:
-                    thousand.setText(sum % 10 + "");
-                    sum = (int) sum / 10;
-                    key++;
-                    break;
-                case 5:
-                    myriabit.setText(sum % 10 + "");
-                    sum = (int) sum / 10;
-                    key++;
-                    break;
-                case 6:
-                    shiwan.setText(sum % 10 + "");
-                    sum = (int) sum / 10;
-                    key++;
-                    break;
-                default:
-                    sum = 0;
+        if(sum < 10000000) {
+            while (sum > 0) {
+                switch (key) {
+                    case 1:
+                        unit.setText(sum % 10 + "");
+                        sum = (int)sum / 10;
+                        key++;
+                        break;
+                    case 2:
+                        decade.setText(sum % 10 + "");
+                        sum = (int)sum / 10;
+                        key++;
+                        break;
+                    case 3:
+                        hundred.setText(sum % 10 + "");
+                        sum = (int)sum / 10;
+                        key++;
+                        break;
+                    case 4:
+                        thousand.setText(sum % 10 + "");
+                        sum = (int) sum / 10;
+                        key++;
+                        break;
+                    case 5:
+                        myriabit.setText(sum % 10 + "");
+                        sum = (int) sum / 10;
+                        key++;
+                        break;
+                    case 6:
+                        shiwan.setText(sum % 10 + "");
+                        sum = (int) sum / 10;
+                        key++;
+                        break;
+                    case 7:
+                        baiwang.setText(sum % 10+ "");
+                        sum = (int) sum / 10;
+                        key++;
+                        break;
+                    default:
+                        key = 0 ;
+
+                }
             }
         }
 
@@ -544,11 +534,11 @@ public class EnterFragment extends Fragment {
             intaqi = weiht;
             dengji1.setLayoutParams(new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT, weiht));
             dengji2.setLayoutParams(new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT, 500 - weiht));
-            if (weiht >100 )
+            if (weiht > 100)
                 tixing.setText("空气污染，请戴口罩");
 
-           int id_name = getActivity().getResources().getIdentifier(
-                   "m"+condcode,"drawable",getActivity().getPackageName());
+            int id_name = getActivity().getResources().getIdentifier(
+                    "m" + condcode, "drawable", getActivity().getPackageName());
 //            int id_name = getActivity().getResources().getIdentifier(
 //                    "m100.png","drawable","com.sci.wumu.wukong");
             //location.setText(id_name+"m"+condcode+".png");
@@ -650,8 +640,7 @@ public class EnterFragment extends Fragment {
                 city = loc.getCity();
                 String citycode = loc.getCityCode();
                 location.setText(city);
-                if(!city.isEmpty())
-                {
+                if (!city.isEmpty()) {
                     pmsearch();
                     stopLocation();
                 }
@@ -709,9 +698,6 @@ public class EnterFragment extends Fragment {
     }
 
 
-
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -723,18 +709,18 @@ public class EnterFragment extends Fragment {
     public void onResume() {
 
         super.onResume();
-        scanDevice();
-        //connectNameDevice(lockName);
-
-
+        if (!isconnected) {
+            //scanen = false;
+            //scanDevice();
+            connectNameDevice(lockName);
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-
     }
+
 
     /**
      * 搜索周围蓝牙设备
@@ -743,37 +729,47 @@ public class EnterFragment extends Fragment {
         if (wholeActivity.bleManager.isInScanning())
             return;
 
-        wholeActivity.bleManager.scanDevice(new ListScanCallback(5000) {
+        wholeActivity.bleManager.scanDevice(new ListScanCallback(3000) {
             @Override
             public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
                 super.onLeScan(device, rssi, scanRecord);
-                Log.i(TAG, "发现设备：" + device.getName());
+
             }
 
             @Override
             public void onScanTimeout() {
-                Toast.makeText(getActivity(), "扫描完", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getActivity(), "扫描完", Toast.LENGTH_LONG).show();
                 super.onScanTimeout();
             }
 
             @Override
             public void onDeviceFound(BluetoothDevice[] devices) {
-               // location.setText(devices.length+"");
-                boolean scanen = false;
+                // location.setText(devices.length+"");
+
+//                Toast.makeText(getActivity(), devices.length + "h", Toast.LENGTH_LONG).show();
+
                 for (int i = 0; devices != null && i < devices.length; i++) {
                     //location.setText(devices[i].getAddress());
+//                    Toast.makeText(getActivity(), "hhhhhhhhhhhhhhhhhhhhh", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getActivity(), devices[i].getName(), Toast.LENGTH_LONG).show();
+
                     if ((devices[i].getName()).equals(lockName)) {
-                       // location.setText(devices[i].getAddress());
                         scanen = true;
-                        connectSpecialDevice(devices[i]);
+                        //connectSpecialDevice(devices[i]);
 
 
                     }
                 }
-                if(!scanen && !isconnected)
-                {
+                if (!scanen && !isconnected) {
                     Toast.makeText(getActivity(), "没有发现设备，请检查", Toast.LENGTH_LONG).show();
-                    scanDevice();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            scanDevice();
+                        }
+
+                    }, 1000);
+
                 }
 
             }
@@ -782,105 +778,103 @@ public class EnterFragment extends Fragment {
     }
 
 
-
     /**
      * 连接设备
      */
-    private void connectSpecialDevice(final BluetoothDevice device) {
+    private void connectNameDevice(final String deviceName) {
 
-        wholeActivity.bleManager.connectDevice(device, true, new BleGattCallback() {
+        wholeActivity.bleManager.scanNameAndConnect(deviceName, 3000, false, new BleGattCallback() {
             @Override
             public void onNotFoundDevice() {
-                //scanDevice();
-                Toast.makeText(getActivity(), "没有发现设备", Toast.LENGTH_LONG).show();
+                getActivity().runOnUiThread(new Runnable(){
+
+                    @Override
+                    public void run() {
+                        Toast.makeText(getActivity(), "没有发现设备", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            }
+
+            @Override
+            public void onFoundDevice(BluetoothDevice device) {
+                getActivity().runOnUiThread(new Runnable(){
+
+                    @Override
+                    public void run() {
+                        Toast.makeText(getActivity(), "发现设备", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
 
             @Override
             public void onConnectSuccess(final BluetoothGatt gatt, int status) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                       // location.setText(gatt.getDevice().getAddress());
-                        //mac = gatt.getDevice().getAddress();
-                        en_fengshu = 1;
-                        imageViewblu.setImageResource(R.drawable.blueen);
-                        textblue.setText("连接中");
-                        isconnected= true;
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(),
-                                "FE0800000000000000000002EF");
-                                //fengsutext.setText("0%");
-                                //seekBar.setProgress(0);
 
-                               // switchled.setSelected(false);
-                            }
-
-                        },1800);
-
-                    }
-                });
                 gatt.discoverServices();
             }
 
-            @Override
-            public void onConnectionStateChange(BluetoothGatt gatt, int status, final int newState) {
-                super.onConnectionStateChange(gatt, status, newState);
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        switch (newState)
-                        {
-                            case BluetoothGatt.STATE_DISCONNECTED:
-//                                imageViewblu.setImageResource(R.drawable.bluedis);
-//                                textblue.setText("未连接");
-//                                en_fengshu = 0;
-//                                break;
-                            case BluetoothGatt.STATE_DISCONNECTING:
-                                //imageViewblu.setImageResource(R.drawable.bluedis);
-                                //textblue.setText("未连接");
-                               // en_fengshu = 0;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                });
-
-
-            }
 
             @Override
             public void onServicesDiscovered(final BluetoothGatt gatt, int status) {
-                Log.i(TAG, "onServicesDiscovered() - " + gatt.getDevice());
+                //Log.i(TAG, "onServicesDiscovered() - " + gatt.getDevice());
                 //查找使用的uuid
-                initConnect(device.getName(), gatt);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        initConnect(lockName, gatt);
+                        // location.setText(gatt.getDevice().getAddress());
+                        //mac = gatt.getDevice().getAddress();
+                        en_fengshu = 1;
+                        imageViewblu.setBackgroundResource(R.drawable.blueen);
+                        textblue.setText("已连接");
+                        isconnected = true;
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                int booltoint = boolswen?1:0;
+                                if(fengsusave<16)
+                                {
+                                    startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(),
+                                            "FE080"+booltoint+"0"+Integer.toHexString(fengsusave)+"0000000000000002EF");
+                                }
+                                else
+                                {
+                                    startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(),
+                                            "FE080"+booltoint+Integer.toHexString(fengsusave)+"0000000000000002EF");
+                                }
+
+                                //fengsutext.setText("0%");
+                                //seekBar.setProgress(0);
+                                // switchled.setSelected(false);
+                            }
+
+                        }, 500);
+
+                    }
+                });
 
             }
 
-            @Override
-            public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-                super.onCharacteristicChanged(gatt, characteristic);
-            }
 
             @Override
             public void onConnectFailure(BleException exception) {
-                Toast.makeText(getActivity(), "ConnectFailure", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getActivity(), "ConnectFailure", Toast.LENGTH_LONG).show();
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
 
-                        imageViewblu.setImageResource(R.drawable.bluedis);
+                        imageViewblu.setBackgroundResource(R.drawable.bluedis);
                         textblue.setText("未连接");
                         en_fengshu = 0;
                         isconnected = false;
-                        seekBar.setProgress(0);
-                        fengsutext.setText("0%");
-                        switchled.setSelected(false);
+                        boolswen = switchled.isChecked();
+                        fengsusave = fengshu;
+//                        seekBar.setProgress(0);
+//                        fengsutext.setText("0");
+//                        switchled.setSelected(false);
 
-
+                        wholeActivity.bleManager.closeBluetoothGatt();
                     }
                 });
                 wholeActivity.bleManager.handleException(exception);
@@ -891,13 +885,13 @@ public class EnterFragment extends Fragment {
         });
     }
 
-    private void initConnect(String deviceName, BluetoothGatt gatt){
+    private void initConnect(String deviceName, BluetoothGatt gatt) {
         wholeActivity.bleManager.getBluetoothState();
         if (gatt != null) {
             for (final BluetoothGattService service : gatt.getServices()) {
                 for (final BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
                     ////识别uuid
-                    if(characteristic.getUuid().equals(ZZR_UUID_BLE_CHAR1)){
+                    if (characteristic.getUuid().equals(ZZR_UUID_BLE_CHAR1)) {
                         //开启接收notify
                         startNotify(service.getUuid().toString(), characteristic.getUuid().toString());
 
@@ -906,6 +900,7 @@ public class EnterFragment extends Fragment {
             }
         }
     }
+
     private void startNotify(String serviceUUID, final String characterUUID) {
         Log.i(TAG, "startNotify");
         boolean suc = wholeActivity.bleManager.notify(
@@ -920,15 +915,18 @@ public class EnterFragment extends Fragment {
                             public void run() {
                                 //接收到应答
                                 //byte[] data
-                                 m_byte =characteristic.getValue();
-                               if(m_byte.length == 13) {
+                                m_byte = characteristic.getValue();
+                                //Toast.makeText(getActivity(), m_byte[0]+"", Toast.LENGTH_LONG).show();
+                                if (m_byte.length == 13) {
+                                    //Toast.makeText(getActivity(), m_byte[3]+"", Toast.LENGTH_LONG).show();
+
 //                                    if(m_byte[0] == 254 && m_byte[1] == 8 ) {
-                                        //m_byte = data;
-                                        //location.setText("he"+m_byte[3]);
-                                        dianyuanshezhi.post(dianyuanupdate);
+                                    //m_byte = data;
+                                    //location.setText("he"+m_byte[3]);
+                                    dianyuanshezhi.post(dianyuanupdate);
 //                                        Toast.makeText(getActivity(), m_byte[0]+m_byte[1]
 //                                                +m_byte[2]+m_byte[3]+m_byte[4]+m_byte[4]+"", Toast.LENGTH_LONG).show();
-                                //Toast.makeText(getActivity(), m_byte.length+"", Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(getActivity(), m_byte.length+"", Toast.LENGTH_LONG).show();
 
 //                                    }
                                 }
@@ -946,35 +944,65 @@ public class EnterFragment extends Fragment {
     }
 
 
-
     private void startWrite(String serviceUUID, final String characterUUID, String writeData) {
-        Log.i(TAG, "startWrite");
-        boolean suc = wholeActivity.bleManager.writeDevice(
-                serviceUUID,
-                characterUUID,
-                HexUtil.hexStringToBytes(writeData),
-                new BleCharacterCallback() {
-                    @Override
-                    public void onSuccess(final BluetoothGattCharacteristic characteristic) {
-                        Log.d(TAG, "write success: " + '\n' + String.valueOf(HexUtil.encodeHex(characteristic.getValue())));
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                            }
-                        });
-                    }
+        if(imagebtn_allen) {
+            Log.i(TAG, "startWrite");
+            boolean suc = wholeActivity.bleManager.writeDevice(
+                    serviceUUID,
+                    characterUUID,
+                    HexUtil.hexStringToBytes(writeData),
+                    new BleCharacterCallback() {
+                        @Override
+                        public void onSuccess(final BluetoothGattCharacteristic characteristic) {
+                            Log.d(TAG, "write success: " + '\n' + String.valueOf(HexUtil.encodeHex(characteristic.getValue())));
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                }
+                            });
+                        }
 
-                    @Override
-                    public void onFailure(BleException exception) {
-                        wholeActivity.bleManager.handleException(exception);
-                    }
-                });
+                        @Override
+                        public void onFailure(BleException exception) {
+                            wholeActivity.bleManager.handleException(exception);
+                        }
+                    });
 
-        if (suc) {
-            wholeActivity.bleManager.stopListenCharacterCallback(ZZR_UUID_BLE_CHAR1.toString());
-            startNotify(serviceUUID.toString(), ZZR_UUID_BLE_CHAR1.toString());
+            if (suc) {
+                wholeActivity.bleManager.stopListenCharacterCallback(ZZR_UUID_BLE_CHAR1.toString());
+                startNotify(serviceUUID.toString(), ZZR_UUID_BLE_CHAR1.toString());
+            }
         }
 
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.linear_blu_en:
+                if(!isconnected)
+                {
+                    connectNameDevice(lockName);
+                }
+                break;
+
+            case R.id.imagebtn_allswitch:
+                if(imagebtn_allen)
+                {
+                    imagebtn_allsw.setBackgroundResource(R.drawable.sw_close);
+                    startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(),
+                            "FE0800000000000000000002EF");
+                    imagebtn_allen =false;
+                }
+                else
+                {
+                    imagebtn_allsw.setBackgroundResource(R.drawable.sw_open);
+                    imagebtn_allen =true;
+                }
+
+        }
 
     }
 }

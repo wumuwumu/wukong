@@ -24,16 +24,16 @@ import com.clj.fastble.BleManager;
 
 public class wholeActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ShopFragment shopFragment =null;
-    private EnterFragment enterFragment =null;
+    private ShopFragment shopFragment = null;
+    private EnterFragment enterFragment = null;
 
 
     private View enterlayout;
-    private  View weblayout;
+    private View weblayout;
 
 
     private ImageView mainview;
-    private  ImageView webview;
+    private ImageView webview;
 
 
     private FragmentManager fragmentmanager;
@@ -45,7 +45,7 @@ public class wholeActivity extends AppCompatActivity implements View.OnClickList
     private BluetoothAdapter mBluetoothAdapter;
     private static final String TAG = "MainActivity";
 
-    private long clickTime = 0; // 第一次点击的时间
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +57,10 @@ public class wholeActivity extends AppCompatActivity implements View.OnClickList
 
         //firstLogin();
         fragmentmanager = getSupportFragmentManager();
+        checkBLEFeature();
         // 第一次启动时选中第0个tab
         setTabSelection(0);
-        checkBLEFeature();
+
 
 
     }
@@ -84,8 +85,8 @@ public class wholeActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void initview() {
-        mainview=(ImageView)findViewById(R.id.main_image);
-        webview=(ImageView)findViewById(R.id.web_image);
+        mainview = (ImageView) findViewById(R.id.main_image);
+        webview = (ImageView) findViewById(R.id.web_image);
 
 
         enterlayout = findViewById(R.id.main_layout);
@@ -138,11 +139,11 @@ public class wholeActivity extends AppCompatActivity implements View.OnClickList
 
                 if (enterFragment == null) {
                     // 如果MessageFragment为空，则创建一个并添加到界面上
-                    enterFragment  = new EnterFragment ();
-                    transaction.add(R.id.content, enterFragment );
+                    enterFragment = new EnterFragment();
+                    transaction.add(R.id.content, enterFragment);
                 } else {
                     // 如果MessageFragment不为空，则直接将它显示出来
-                    transaction.show(enterFragment );
+                    transaction.show(enterFragment);
                     // transaction.add(R.id.content, mainfragment);
                 }
                 break;
@@ -153,7 +154,7 @@ public class wholeActivity extends AppCompatActivity implements View.OnClickList
                 if (shopFragment == null) {
                     // 如果ContactsFragment为空，则创建一个并添加到界面上
                     shopFragment = new ShopFragment();
-                    transaction.add(R.id.content,shopFragment);
+                    transaction.add(R.id.content, shopFragment);
                 } else {
                     // 如果ContactsFragment不为空，则直接将它显示出来
                     transaction.show(shopFragment);
@@ -189,29 +190,6 @@ public class wholeActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        exit();
-//    }
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        // 是否触发按键为back键
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            onBackPressed();
-//            return true;
-//        } else { // 如果不是back键正常响应
-//            return super.onKeyDown(keyCode, event);
-//        }
-//    }
-//    private void exit() {
-//        if ((System.currentTimeMillis() - clickTime) > 2000) {
-//            Toast.makeText(this, "再按一次后退键退出程序", Toast.LENGTH_SHORT).show();
-//            clickTime = System.currentTimeMillis();
-//        } else {
-//            this.finish();
-//        }
-//    }
-
 
     @Override
     protected void onResume() {
@@ -240,9 +218,8 @@ public class wholeActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
+    private static final int REQUEST_FINE_LOCATION = 0;
 
-
-    private static final int REQUEST_FINE_LOCATION=0;
     private void mayRequestLocation() {
         String[] permissionString = {
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -257,15 +234,15 @@ public class wholeActivity extends AppCompatActivity implements View.OnClickList
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.BLUETOOTH_ADMIN,};
         if (Build.VERSION.SDK_INT >= 23) {
-            for(int i=0;i<permissionString.length;i++) {
+            for (int i = 0; i < permissionString.length; i++) {
                 int checkCallPhonePermission = ContextCompat.checkSelfPermission(wholeActivity.this, permissionString[i]);
-                if(checkCallPhonePermission != PackageManager.PERMISSION_GRANTED){
+                if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
                     //判断是否需要 向用户解释，为什么要申请该权限
                     // if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION))
                     //Toast.makeText(context,R.string.ble_need, 1).show();
-                    ActivityCompat.requestPermissions(this ,permissionString,REQUEST_FINE_LOCATION);
+                    ActivityCompat.requestPermissions(this, permissionString, REQUEST_FINE_LOCATION);
                     return;
-                }else{
+                } else {
                 }
             }
         } else {
@@ -282,7 +259,7 @@ public class wholeActivity extends AppCompatActivity implements View.OnClickList
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // The requested permission is granted.
-                } else{
+                } else {
                     // The user disallowed the requested permission.
                 }
                 break;

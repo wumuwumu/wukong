@@ -12,46 +12,64 @@
         android:layout_height="50dp"
         android:background="#57e3d8"
         android:id="@+id/gatherline1">
-        <ImageButton
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:id="@+id/tuisong"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
-            android:background="@drawable/tuisong"
-            />
+        <!--<ImageButton-->
+            <!--android:layout_width="25dp"-->
+            <!--android:layout_height="25dp"-->
+            <!--android:id="@+id/tuisong"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:background="@drawable/tuisong"-->
+            <!--/>-->
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
-        <ImageButton
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:id="@+id/shezhi"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/ic_settings_black_24dp"
-            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="主页"
+            android:layout_gravity="center"
+            android:textColor="#ffffff"
+            android:textSize="20sp"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <!--<ImageButton-->
+            <!--android:layout_width="25dp"-->
+            <!--android:layout_height="25dp"-->
+            <!--android:id="@+id/shezhi"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--android:background="@drawable/ic_settings_black_24dp"-->
+            <!--/>-->
     </LinearLayout>
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/gatherline1"
-        android:id="@+id/bluetext"
-        android:text="未连接"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="30dp"/>
+        android:layout_margin="30dp"
+        android:id="@+id/linear_blu_en">
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:id="@+id/imageViewblu"
+            android:background="@drawable/bluedis"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bluetext"
+            android:text="未连接"/>
 
 
-    <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignBottom="@+id/bluetext"
-        android:layout_toLeftOf="@+id/bluetext"
-        android:id="@+id/imageViewblu"
-        android:src="@drawable/bluedis"
-        />
+
+
+    </LinearLayout>
+
 
 
     <TextView
@@ -59,20 +77,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/gatherline1"
         android:textColor="@color/black"
-        android:text="净化量"
-        android:textSize="20sp"
+        android:text="悟空已经帮您过滤掉"
+        android:textSize="18sp"
         android:id="@+id/textView2"
         android:layout_marginTop="50dp"
         android:layout_marginLeft="20dp"
         />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@+id/textView2"
-        android:layout_margin="20dp"
-        android:background="#CCCCCC"
-        />
+
 
 
 
@@ -80,9 +92,9 @@
         android:layout_width="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_height="100dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:layout_below="@+id/textView2"
         android:id="@+id/gatherline2"
         android:background="@drawable/jishuqigai"
@@ -92,9 +104,24 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:id="@+id/baiwang"
+            android:text="0"
+            android:textSize="48sp"
+            android:textColor="#666666"
+            android:layout_weight="4"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="#ffffff"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:id="@+id/shiwan"
             android:text="0"
-            android:textSize="50sp"
+            android:textSize="48sp"
             android:textColor="#666666"
             android:layout_weight="4"
             android:textStyle="bold"
@@ -113,7 +140,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/myriabit"
             android:text="0"
-            android:textSize="50sp"
+            android:textSize="48sp"
             android:textColor="#666666"
             android:textStyle="bold"
             android:gravity="center"
@@ -132,7 +159,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/thousand"
             android:text="0"
-            android:textSize="50sp"
+            android:textSize="48sp"
             android:textColor="#666666"
             android:textStyle="bold"
             android:gravity="center"
@@ -149,7 +176,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/hundred"
             android:text="0"
-            android:textSize="50sp"
+            android:textSize="48sp"
             android:textColor="#666666"
             android:textStyle="bold"
             android:gravity="center"
@@ -166,7 +193,7 @@
             android:layout_weight="2"
             android:text="."
             android:textColor="#ffffff"
-            android:textSize="50sp"
+            android:textSize="48sp"
             android:gravity=""
 
             android:layout_gravity="center"
@@ -179,7 +206,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/decade"
             android:text="0"
-            android:textSize="50sp"
+            android:textSize="48sp"
             android:textColor="#666666"
             android:gravity="center"
             android:layout_weight="4"
@@ -197,7 +224,7 @@
             android:text="0"
             android:textColor="#666666"
             android:background="#ffffff"
-            android:textSize="50sp"
+            android:textSize="48sp"
             android:layout_weight="4"
             android:gravity="center"
             android:layout_marginLeft="3dp"
@@ -225,6 +252,16 @@
         android:layout_centerHorizontal="true"
 
      />
+    
+    <ImageButton
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/sw_close"
+        android:id="@+id/imagebtn_allswitch"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="80dp"/>
+
 
 
 

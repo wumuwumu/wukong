@@ -40,117 +40,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/fenshulinear"
-            android:layout_marginLeft="15dp"
             android:layout_below="@+id/location"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="15dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textColor="#ffffff"
-                android:text="风速调节"
-                android:textSize="18sp"
-                android:id="@+id/textView2"
-                android:layout_weight="1"
-
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/fengsuzhi"
-                android:textColor="#ffffff"
-                android:text="0%"
-                />
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-        </LinearLayout>
-
-        <SeekBar
-            style="@android:style/Widget.DeviceDefault.SeekBar"
-            android:layout_width="match_parent"
-            android:id="@+id/seekbar_wea"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_below="@+id/fenshulinear"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@+id/seekbar_wea"
-            android:id="@+id/baifengbi"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0%"
-                android:layout_weight="1"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="100%" />
-        </LinearLayout>
-
-        <!--led开关-->
-        <LinearLayout android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/baifengbi"
-            android:id="@+id/leddeng"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginLeft="20dp">
-            <TextView android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="LED灯"
-                android:textColor="#ffffff"/>
-            <Switch
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:id="@+id/switchled"
-                android:gravity="left"/>
-        </LinearLayout>
-
-        <!--电量显示-->
-        <LinearLayout android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/leddeng"
-            android:id="@+id/linelayout1"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginLeft="20dp">
-            <TextView android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="剩余电量"
-                android:textColor="#ffffff"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/dianliangzhi"
-                android:textColor="#ffffff"
-                android:text="100%"
-                android:layout_marginRight="10dp"/>
-            <ImageView android:layout_width="wrap_content"
-                android:layout_height="20dp"
-
-                android:id="@+id/dianliangview"
-                android:src="@drawable/bar10"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/linelayout1"
             android:id="@+id/linearlayout2"
             android:layout_marginTop="25dp"
             android:layout_marginLeft="15dp"
@@ -237,62 +127,62 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="100"
                     android:text="优"
-                    android:background="#339933"
+                    android:background="#5eca7f"
                     android:gravity="center"/>
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"/>
+                    android:layout_weight="2"/>
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="100"
                     android:text="良"
-                    android:background="#FFFF00"
+                    android:background="#a7d163"
                     android:gravity="center"/>
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"/>
+                    android:layout_weight="2"/>
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="100"
                     android:text="轻度"
-                    android:background="#FFFF00"
+                    android:background="#fbcf62"
                     android:gravity="center"/>
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"/>
+                    android:layout_weight="2"/>
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="100"
                     android:text="中度"
-                    android:background="#FFFF00"
+                    android:background="#fbb162"
                     android:gravity="center"/>
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"/>
+                    android:layout_weight="2"/>
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="200"
                     android:text="重度"
-                    android:background="#CC3399"
+                    android:background="#ef855c"
                     android:gravity="center"/>
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"/>
+                    android:layout_weight="2"/>
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="400"
                     android:text="严重"
-                    android:background="#ff0000"
+                    android:background="#ed6161"
                     android:gravity="center"/>
 
 
@@ -320,89 +210,111 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView4"
             android:layout_marginTop="20dp"
+            android:layout_marginLeft="30dp"
             android:orientation="vertical"
-            android:layout_margin="30dp">
+            android:layout_marginRight="30dp"
+            android:id="@+id/Linear_shuju">
 
 
             <!--第一列-->
 
 
             <LinearLayout
-                        android:layout_width="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            >
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-
-                                android:text="PM 2.5   "
-                                android:textColor="#000000"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/pm25"
-                                android:text="0"
-                                android:textColor="#000000"
-                                />
+                        android:text="PM 2.5   "
+                        android:textColor="#000000"
+                        />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/pm25"
+                        android:text="0"
+                        android:textColor="#000000"
+                        />
 
 
-                        </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1">
+                </LinearLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5">
 
-                                android:text="PM10   "
-                                android:textColor="#000000"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/pm10"
-                                android:text="0"
-                                android:textColor="#000000"
-                                />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
 
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="SO2   "
-                                android:textColor="#000000"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/textso2"
-                                android:text="0"
-
-                                android:textColor="#000000"
-                                />
+                        android:text="PM10   "
+                        android:textColor="#000000"
+                        />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/pm10"
+                        android:text="0"
+                        android:textColor="#000000"
+                        />
 
 
-                        </LinearLayout>
+                </LinearLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
 
-                    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SO2   "
+                        android:textColor="#000000"
+                        />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textso2"
+                        android:text="0"
+
+                        android:textColor="#000000"
+                        />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
 
 
             <!--第二行-->
@@ -420,7 +332,7 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:layout_weight="5">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -429,6 +341,10 @@
                             android:text="NO2   "
                             android:textColor="#000000"
                             />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -441,10 +357,15 @@
 
                     </LinearLayout>
 
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:layout_weight="5">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -452,6 +373,10 @@
                             android:text="O3   "
                             android:textColor="#000000"
                             />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -463,10 +388,15 @@
 
                     </LinearLayout>
 
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:layout_weight="5">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -474,6 +404,10 @@
                             android:text="CO   "
                             android:textColor="#000000"
                             />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -496,6 +430,135 @@
 
 
         </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fenshulinear"
+            android:layout_marginLeft="15dp"
+            android:layout_below="@+id/Linear_shuju"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            >
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:textColor="#ffffff"
+                android:layout_gravity="left"
+                android:textSize="18sp"
+                android:id="@+id/textView2"
+                android:src="@drawable/im_fenshu"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fengsuzhi"
+                android:textColor="#ffffff"
+                android:text="0"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <SeekBar
+            style="@android:style/Widget.DeviceDefault.SeekBar"
+            android:layout_width="match_parent"
+            android:id="@+id/seekbar_wea"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@+id/fenshulinear"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/seekbar_wea"
+            android:id="@+id/baifengbi"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="100" />
+        </LinearLayout>
+
+        <!--led开关-->
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/baifengbi"
+            android:id="@+id/leddeng"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginLeft="20dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/im_deng"
+                android:textColor="#ffffff"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:id="@+id/switchled"
+                android:gravity="left"/>
+        </LinearLayout>
+
+        <!--电量显示-->
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/leddeng"
+            android:id="@+id/linelayout1"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginLeft="20dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+
+                android:src="@drawable/im_dianliang"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/dianliangzhi"-->
+                <!--android:textColor="#ffffff"-->
+                <!--android:text="100%"-->
+                <!--android:layout_marginRight="10dp"-->
+                <!--android:layout_gravity="center"/>-->
+            <ImageView android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:id="@+id/dianliangview"
+                android:src="@drawable/bar10"/>
+        </LinearLayout>
+
 
 
 
