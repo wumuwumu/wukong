@@ -1,4 +1,4 @@
-package com.sci.wumu.wukong;
+package com.sci.wumu.wukong.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -15,12 +15,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.clj.fastble.BleManager;
+import com.sci.wumu.wukong.fragment.EnterFragment;
+import com.sci.wumu.wukong.R;
+import com.sci.wumu.wukong.fragment.ShopFragment;
+import com.sci.wumu.wukong.Utils.NetWorkUtils;
 
 public class wholeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -60,6 +63,7 @@ public class wholeActivity extends AppCompatActivity implements View.OnClickList
         checkBLEFeature();
         // 第一次启动时选中第0个tab
         setTabSelection(0);
+
 
 
 
@@ -194,9 +198,10 @@ public class wholeActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onResume() {
         super.onResume();
-        if (!mBluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        bleManager.enableBluetooth();
+        if(!NetWorkUtils.isNetworkConnected(getApplicationContext()))
+        {
+            Toast.makeText(getApplicationContext(),"网络不可用",Toast.LENGTH_SHORT).show();
         }
     }
 

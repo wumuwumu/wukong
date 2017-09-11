@@ -1,4 +1,4 @@
-package com.sci.wumu.wukong;
+package com.sci.wumu.wukong.adpter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

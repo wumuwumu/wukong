@@ -1,4 +1,4 @@
-package com.sci.wumu.wukong;
+package com.sci.wumu.wukong.activity;
 
 import android.Manifest;
 import android.app.Notification;
@@ -9,12 +9,12 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
-import java.util.Calendar;
+import com.sci.wumu.wukong.R;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -30,45 +30,10 @@ public class FirstActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
        // halfmonth();
-        //mayRequestLocation();
         getHomeActivity();
 
     }
 
-    private static final int REQUEST_FINE_LOCATION=0;
-    private void mayRequestLocation() {
-        String[] permissionString = {
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_NETWORK_STATE,
-                Manifest.permission.ACCESS_WIFI_STATE,
-                Manifest.permission.CHANGE_WIFI_STATE,
-                Manifest.permission.INTERNET,
-                Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,
-                Manifest.permission.BLUETOOTH,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.BLUETOOTH_ADMIN,};
-        if (Build.VERSION.SDK_INT >= 23) {
-            for(int i=0;i<permissionString.length;i++) {
-                int checkCallPhonePermission = ContextCompat.checkSelfPermission(FirstActivity.this, permissionString[i]);
-                if(checkCallPhonePermission != PackageManager.PERMISSION_GRANTED){
-                    //判断是否需要 向用户解释，为什么要申请该权限
-                    // if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION))
-                    //Toast.makeText(context,R.string.ble_need, 1).show();
-                    ActivityCompat.requestPermissions(this ,permissionString,REQUEST_FINE_LOCATION);
-
-                    return;
-                }else{
-
-                }
-            }
-            getHomeActivity();
-        } else {
-            getHomeActivity();
-
-        }
-    }
 
 
     private void getHomeActivity() {

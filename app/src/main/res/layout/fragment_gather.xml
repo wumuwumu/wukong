@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sci.wumu.wukong.fragment.GatherFragment"
     android:background="#cae4f5">
 
     <!-- TODO: Update blank fragment layout -->
@@ -49,12 +48,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/gatherline1"
         android:layout_alignParentRight="true"
-        android:layout_margin="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         android:id="@+id/linear_blu_en">
 
         <ImageView
-            android:layout_width="15dp"
-            android:layout_height="20dp"
+            android:layout_width="20dp"
+            android:layout_height="25dp"
             android:layout_gravity="center"
             android:id="@+id/imageViewblu"
             android:background="@drawable/bluedis"
@@ -63,6 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/bluetext"
+            android:textSize="20sp"
             android:text="未连接"/>
 
 
@@ -233,6 +234,8 @@
             android:textStyle="bold"
 
             />
+
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -248,6 +251,7 @@
         android:id="@+id/tixing"
         android:layout_below="@+id/gatherline2"
         android:text=""
+        android:textSize="24dp"
         android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
 
@@ -265,13 +269,13 @@
 
 
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/zhuanghuan1"
-        android:id="@+id/imageView"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+    <!--<ImageView-->
+        <!--android:layout_width="50dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:src="@drawable/zhuanghuan1"-->
+        <!--android:id="@+id/imageView"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerHorizontal="true"/>-->
 
 </RelativeLayout>
 

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.sci.wumu.wukong.EnterFragment">
+    tools:context="com.sci.wumu.wukong.fragment.EnterFragment">
 
 
 
@@ -16,16 +16,16 @@
 
    ></android.support.v4.view.ViewPager>
 
-    <!--<ImageView-->
-        <!--android:layout_width="50dp"-->
-        <!--android:layout_height="50dp"-->
-        <!--app:srcCompat="@drawable/zhuanghuan1"-->
-        <!--android:id="@+id/double_image"-->
-        <!--android:layout_marginLeft="35dp"-->
-        <!--android:layout_marginRight="35dp"-->
-        <!--android:layout_marginBottom="35dp"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_centerHorizontal="true" />-->
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:srcCompat="@drawable/zhuanghuan1"
+        android:id="@+id/img_transfor"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 
 

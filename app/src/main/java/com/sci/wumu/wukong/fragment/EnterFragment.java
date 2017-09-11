@@ -1,4 +1,4 @@
-package com.sci.wumu.wukong;
+package com.sci.wumu.wukong.fragment;
 
 import android.app.ActionBar;
 import android.bluetooth.BluetoothAdapter;
@@ -8,7 +8,6 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -36,6 +35,8 @@ import com.clj.fastble.conn.BleGattCallback;
 import com.clj.fastble.exception.BleException;
 import com.clj.fastble.scan.ListScanCallback;
 import com.clj.fastble.utils.HexUtil;
+import com.sci.wumu.wukong.R;
+import com.sci.wumu.wukong.activity.wholeActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,6 +48,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -67,12 +69,12 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
     View fragment_gather;
     View fragment_weather;
     private static final UUID ZZR_UUID_BLE_SEVICE = UUID.fromString("0000FFF0-0000-1000-8000-00805f9b34fb");
-    private static final UUID ZZR_UUID_BLE_CHAR = UUID.fromString("0000FFF2-0000-1000-8000-00805f9b34fb");
-    private static final UUID ZZR_UUID_BLE_CHAR1 = UUID.fromString("0000FFF3-0000-1000-8000-00805f9b34fb");
+    private static final UUID ZZR_UUID_BLE_CHAR = UUID.fromString("0000FFF1-0000-1000-8000-00805f9b34fb");
+    private static final UUID ZZR_UUID_BLE_CHAR1 = UUID.fromString("0000FFF4-0000-1000-8000-00805f9b34fb");
 
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = new AMapLocationClientOption();
-    private String city = "no";
+    private String city = null;
 
     TextView location;
     TextView textviewsqi;
@@ -111,7 +113,7 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
     TextView tixing;
     int fengshu = 0;
     int fengsusave = 0;
-    boolean boolswen;
+    boolean boolswen = false;
     int en_fengshu = 0;
     String hexData;
 
@@ -130,6 +132,7 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
     private Handler sendinfo = new Handler();
 
     private Handler threadHandler = new Handler();
+    private ImageView imgTransfor;
 
 
     final Runnable dianyuanupdate = new Runnable() {
@@ -238,12 +241,39 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
 
         //绑定适配器
         viewPager.setAdapter(mPagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position)
+                {
+                    case 0:
+                        //Toast.makeText(getActivity(),"000",Toast.LENGTH_LONG).show();
+                        imgTransfor.setImageResource(R.drawable.zhuanghuan1);
+                        break;
+                    case 1:
+                       // Toast.makeText(getActivity(),"111",Toast.LENGTH_LONG).show();
+                        imgTransfor.setImageResource(R.drawable.zhuanghuan2);
+                        break;
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         //设置viewPager的初始界面为第一个界面
         viewPager.setCurrentItem(0);
 
         init();
         initevent();
-        location();
+//        location();
 
         BluetoothManager bluetoothManager = (BluetoothManager) getActivity()
                 .getSystemService(Context.BLUETOOTH_SERVICE);
@@ -261,6 +291,8 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
     }
 
     private void init() {
+        //Toast.makeText(getActivity(), Long.MIN_VALUE+"",Toast.LENGTH_SHORT).show();
+        imgTransfor = (ImageView) view.findViewById(R.id.img_transfor);
         textviewqlty = (TextView) fragment_weather.findViewById(R.id.qlty);
         location = (TextView) fragment_weather.findViewById(R.id.location);
         textviewsqi = (TextView) fragment_weather.findViewById(R.id.sqi);
@@ -287,6 +319,7 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
         thousand = (TextView) fragment_gather.findViewById(R.id.thousand);
         myriabit = (TextView) fragment_gather.findViewById(R.id.myriabit);
         shiwan = (TextView) fragment_gather.findViewById(R.id.shiwan);
+        baiwang = (TextView)fragment_gather.findViewById(R.id.baiwang);
 //        fenxiang = (ImageButton) fragment_gather.findViewById(R.id.tuisong);
         imagebtn_allsw = (ImageButton)fragment_gather.findViewById(R.id.imagebtn_allswitch);
         linearbluen = (LinearLayout)fragment_gather.findViewById(R.id.linear_blu_en);
@@ -338,8 +371,9 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
                             "00" + "00" + "00" + "00" + "00" + "00" + "00" + "02" + "EF";
                 }
 
-
-                startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(), str);
+                if(imagebtn_allen) {
+                    startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(), str);
+                }
 
                 fengsutext.setText(fengshu + "");
                 // sendinfo.post(runnablesendinfo);
@@ -364,9 +398,9 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
         switchled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String str;
                 if (isChecked) {
                     leden = 1;
-                    String str;
                     if (fengshu < 16) {
                         str = "FE" + "08" + "0" + Integer.toHexString(leden) + "0" + Integer.toHexString(fengshu) +
                                 "00" + "00" + "00" + "00" + "00" + "00" + "00" + "02" + "EF";
@@ -376,12 +410,8 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
                     }
 
 
-                    startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(), str);
-
-                    fengsutext.setText(fengshu+"");
                 } else {
                     leden = 0;
-                    String str;
                     if (fengshu < 16) {
                         str = "FE" + "08" + "0" + Integer.toHexString(leden) + "0" + Integer.toHexString(fengshu) +
                                 "00" + "00" + "00" + "00" + "00" + "00" + "00" + "02" + "EF";
@@ -390,11 +420,12 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
                                 "00" + "00" + "00" + "00" + "00" + "00" + "00" + "02" + "EF";
                     }
 
-
-                    startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(), str);
-
-                    fengsutext.setText(fengshu+"");
                 }
+
+                if(imagebtn_allen) {
+                    startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(), str);
+                }
+                fengsutext.setText(fengshu+"");
             }
         });
 
@@ -415,49 +446,66 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
     }
 
     private void sync() {
-
-        int sum = (m_byte[4]+m_byte[5]*100+m_byte[6]*10000+m_byte[7]*1000000+m_byte[8]*100000000)*intaqi/100000;
+//        long data1 = m_byte[4];
+//        long data2 = m_byte[5];
+//        long data3 = m_byte[6];
+//        long data4 = m_byte[7];
+//        long data5 = m_byte[8];
+       // Toast.makeText(getActivity(), Long.MIN_VALUE+"",Toast.LENGTH_SHORT);
+        long sum = ((long)m_byte[4]+(long)m_byte[5]*100+(long)m_byte[6]*10000+(long)m_byte[7]*1000000L+(long)m_byte[8]*100000000L)*intaqi/100000L;
+       // long sum = (data1+data2*100+data3*10000L+data4*1000000L+data5*100000000L)*intaqi/100000L;
+        //long sum = (((long)m_byte[4]+(long)m_byte[5]*100+(long)m_byte[6]*10000+(long)m_byte[7]*1000000+(long)m_byte[8]*100000000)*intaqi/100000);
+         //sum = (long)123456789;
+        //location.setText(String.valueOf(sum));
+        unit.setText("0");
+        decade.setText("0");
+        hundred.setText("0");
+        thousand.setText("0");
+        myriabit.setText("0");
+        shiwan.setText("0");
+        baiwang.setText("0");
         int key = 1;
-        if(sum < 10000000) {
+        if(sum > 0 && sum < 10000000) {
             while (sum > 0) {
                 switch (key) {
                     case 1:
                         unit.setText(sum % 10 + "");
-                        sum = (int)sum / 10;
+                        sum = (long) (sum / 10);
                         key++;
                         break;
                     case 2:
                         decade.setText(sum % 10 + "");
-                        sum = (int)sum / 10;
+                        sum = (long)(sum / 10);
                         key++;
                         break;
                     case 3:
                         hundred.setText(sum % 10 + "");
-                        sum = (int)sum / 10;
+                        sum = (long)(sum / 10);
                         key++;
                         break;
                     case 4:
                         thousand.setText(sum % 10 + "");
-                        sum = (int) sum / 10;
+                        sum = (long) (sum / 10);
                         key++;
                         break;
                     case 5:
                         myriabit.setText(sum % 10 + "");
-                        sum = (int) sum / 10;
+                        sum = (long) (sum / 10);
                         key++;
                         break;
                     case 6:
                         shiwan.setText(sum % 10 + "");
-                        sum = (int) sum / 10;
+                        sum = (long) (sum / 10);
                         key++;
                         break;
                     case 7:
                         baiwang.setText(sum % 10+ "");
-                        sum = (int) sum / 10;
+                        sum = (long) (sum / 10);
                         key++;
                         break;
                     default:
                         key = 0 ;
+                        sum=0;
 
                 }
             }
@@ -465,53 +513,51 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
 
     }
 
-    private void location() {
-        //初始化client
-        locationClient = new AMapLocationClient(getActivity().getApplicationContext());
-        //设置定位参数
-        locationClient.setLocationOption(getDefaultOption());
-        // 设置定位监听
-        locationClient.setLocationListener(locationListener);
-        new Thread() {
-
-            @Override
-            public void run() {
-                startLocation();
-
-            }
-        }.start();
-    }
+//    private void location() {
+//        //初始化client
+//        locationClient = new AMapLocationClient(getActivity().getApplicationContext());
+//        //设置定位参数
+//        locationClient.setLocationOption(getDefaultOption());
+//        // 设置定位监听
+//        locationClient.setLocationListener(locationListener);
+//
+//        startLocation();
+//
+//    }
 
     private void pmsearch() {
         new Thread() {
 
             public void run() {
                 String hpm25 = city.substring(0, city.length() - 1);
-                String path25 = "https://free-api.heweather.com/v5/weather?city="
-                        + hpm25
-                        + "&key=045fc8d913a14f2c9872d4139946135d";
 
-                String result = "java";
+
+
                 try {
-                    result = readJsonFromUrl(path25);
-                    if (!result.equals("error")) {
-
+                    String city = URLEncoder.encode(hpm25, "utf-8");
+                    String path25 = "https://free-api.heweather.com/v5/weather?city="
+                            + city
+                            + "&key=045fc8d913a14f2c9872d4139946135d";
+                   String result = readJsonFromUrl(path25);
+//                   //Toast.makeText(getActivity(),result,Toast.LENGTH_LONG);
+//                    if (!result.equals("error")) {
+//
                         JSONAnalysis(result);
-                    } else {
-                        Toast.makeText(getActivity(), "获取数据失败", Toast.LENGTH_SHORT)
-                                .show();
-                    }
-
+//                    } else {
+//                        Toast.makeText(getActivity(), "获取数据失败", Toast.LENGTH_SHORT)
+//                                .show();
+//                    }
+//
                 } catch (Exception e) {
-
-                    e.printStackTrace();
-                    /**
-                     * 如果获取失败，或出现异常，那么子线程发送失败的消息（FAILURE）到主线程，主线程显示Toast，来告诉使用者，数据获取是失败。
-                     */
-                    Toast.makeText(getActivity(), "获取失败", Toast.LENGTH_SHORT)
-                            .show();
+//
+//                    e.printStackTrace();
+//                    /**
+//                     * 如果获取失败，或出现异常，那么子线程发送失败的消息（FAILURE）到主线程，主线程显示Toast，来告诉使用者，数据获取是失败。
+//                     */
+//                    Toast.makeText(getActivity(), "获取失败", Toast.LENGTH_SHORT)
+//                            .show();
                 }
-                //location.setText(result);
+//                //location.setText(result);
 
             }
         }.start();
@@ -547,7 +593,7 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
         }
     };
 
-    private static String readAll(Reader rd) throws IOException {
+    private  String readAll(Reader rd) throws IOException {
         StringBuilder sb = new StringBuilder();
         int cp;
         while ((cp = rd.read()) != -1) {
@@ -556,7 +602,7 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
         return sb.toString();
     }
 
-    public static String readJsonFromUrl(String url) throws IOException, JSONException {
+    public String readJsonFromUrl(String url) throws IOException, JSONException {
         InputStream is = new URL(url).openStream();
         try {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
@@ -567,7 +613,7 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
             return "error";
         } finally {
             is.close();
-            // System.out.println("同时 从这里也能看出 即便return了，仍然会执行finally的！");
+
         }
     }
 
@@ -578,6 +624,8 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
         //JSONObject object = null;
 
         try {
+            if(string.equals("error"))
+                return;
             //object = new JSONObject(string);
             JSONObject jsonobject1 = new JSONObject(string);
             // Log.d("mysis",jsonobject1.toString());
@@ -621,34 +669,39 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
         mOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
         mOption.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
         mOption.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
-        mOption.setInterval(2000);//可选，设置定位间隔。默认为2秒
+        mOption.setInterval(1000*60*5);//可选，设置定位间隔。默认为2秒
         mOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是true
         mOption.setOnceLocation(false);//可选，设置是否单次定位。默认是false
         mOption.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
         AMapLocationClientOption.setLocationProtocol(AMapLocationClientOption.AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
         mOption.setSensorEnable(false);//可选，设置是否使用传感器。默认是false
         mOption.setWifiScan(true); //可选，设置是否开启wifi扫描。默认为true，如果设置为false会同时停止主动刷新，停止以后完全依赖于系统刷新，定位位置可能存在误差
-        mOption.setLocationCacheEnable(true); //可选，设置是否使用缓存定位，默认为true
+        mOption.setLocationCacheEnable(false); //可选，设置是否使用缓存定位，默认为true
+        //mOption.setMockEnable(true);
         return mOption;
     }
 
     AMapLocationListener locationListener = new AMapLocationListener() {
         @Override
         public void onLocationChanged(AMapLocation loc) {
-            if (null != loc) {
-                //解析定位结果
-                city = loc.getCity();
-                String citycode = loc.getCityCode();
-                location.setText(city);
-                if (!city.isEmpty()) {
-                    pmsearch();
-                    stopLocation();
+           try{
+               if (null != loc) {
+                if(loc.getErrorCode() == 0) {
+                    //解析定位结果
+                    city = loc.getCity();
+                   // location.setText(city);
+                    location.setText(city+"");
+                    if (!city.isEmpty() && city != null  ) {
+                        pmsearch();
+                        //stopLocation();
+                    }
                 }
 
-            } else {
-                Toast.makeText(getActivity(), "定位失败，请检查网络",
-                        Toast.LENGTH_SHORT).show();
             }
+           }catch (Exception e)
+           {}
+
+
         }
     };
 
@@ -661,8 +714,12 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
      */
     private void startLocation() {
 
-        // 设置定位参数
-        locationClient.setLocationOption(locationOption);
+        //初始化client
+        locationClient = new AMapLocationClient(getActivity().getApplicationContext());
+        //设置定位参数
+        locationClient.setLocationOption(getDefaultOption());
+        // 设置定位监听
+        locationClient.setLocationListener(locationListener);
         // 启动定位
         locationClient.startLocation();
     }
@@ -701,6 +758,7 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onDestroy() {
         super.onDestroy();
+        stopLocation();
         destroyLocation();
 
     }
@@ -709,6 +767,7 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
     public void onResume() {
 
         super.onResume();
+        startLocation();
         if (!isconnected) {
             //scanen = false;
             //scanDevice();
@@ -719,6 +778,7 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onStop() {
         super.onStop();
+        stopLocation();
     }
 
 
@@ -730,17 +790,15 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
             return;
 
         wholeActivity.bleManager.scanDevice(new ListScanCallback(3000) {
-            @Override
-            public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
-                super.onLeScan(device, rssi, scanRecord);
 
-            }
 
             @Override
             public void onScanTimeout() {
 //                Toast.makeText(getActivity(), "扫描完", Toast.LENGTH_LONG).show();
                 super.onScanTimeout();
             }
+
+
 
             @Override
             public void onDeviceFound(BluetoothDevice[] devices) {
@@ -783,7 +841,7 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
      */
     private void connectNameDevice(final String deviceName) {
 
-        wholeActivity.bleManager.scanNameAndConnect(deviceName, 3000, false, new BleGattCallback() {
+        wholeActivity.bleManager.scanNameAndConnect(deviceName, 25000, false, new BleGattCallback() {
             @Override
             public void onNotFoundDevice() {
                 getActivity().runOnUiThread(new Runnable(){
@@ -806,6 +864,8 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
                     }
                 });
             }
+
+
 
             @Override
             public void onConnectSuccess(final BluetoothGatt gatt, int status) {
@@ -831,16 +891,20 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                int booltoint = boolswen?1:0;
-                                if(fengsusave<16)
+                                if(!imagebtn_allen)
                                 {
                                     startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(),
-                                            "FE080"+booltoint+"0"+Integer.toHexString(fengsusave)+"0000000000000002EF");
+                                            "FE0800000000000000000002EF");
                                 }
-                                else
-                                {
-                                    startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(),
-                                            "FE080"+booltoint+Integer.toHexString(fengsusave)+"0000000000000002EF");
+                                else {
+                                    int booltoint = switchled.isChecked() ? 1 : 0;
+                                    if (fengshu < 16) {
+                                        startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(),
+                                                "FE080" + booltoint + "0" + Integer.toHexString(fengshu) + "0000000000000002EF");
+                                    } else {
+                                        startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(),
+                                                "FE080" + booltoint + Integer.toHexString(fengshu) + "0000000000000002EF");
+                                    }
                                 }
 
                                 //fengsutext.setText("0%");
@@ -866,10 +930,8 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
 
                         imageViewblu.setBackgroundResource(R.drawable.bluedis);
                         textblue.setText("未连接");
-                        en_fengshu = 0;
+                         en_fengshu = 0;
                         isconnected = false;
-                        boolswen = switchled.isChecked();
-                        fengsusave = fengshu;
 //                        seekBar.setProgress(0);
 //                        fengsutext.setText("0");
 //                        switchled.setSelected(false);
@@ -910,9 +972,9 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
                     @Override
                     public void onSuccess(final BluetoothGattCharacteristic characteristic) {
                         Log.d(TAG, "notify success： " + '\n' + String.valueOf(HexUtil.encodeHex(characteristic.getValue())));
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                        //getActivity().runOnUiThread(new Runnable() {
+                         //   @Override
+                         //   public void run() {
                                 //接收到应答
                                 //byte[] data
                                 m_byte = characteristic.getValue();
@@ -923,15 +985,16 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
 //                                    if(m_byte[0] == 254 && m_byte[1] == 8 ) {
                                     //m_byte = data;
                                     //location.setText("he"+m_byte[3]);
+
                                     dianyuanshezhi.post(dianyuanupdate);
 //                                        Toast.makeText(getActivity(), m_byte[0]+m_byte[1]
 //                                                +m_byte[2]+m_byte[3]+m_byte[4]+m_byte[4]+"", Toast.LENGTH_LONG).show();
                                     //Toast.makeText(getActivity(), m_byte.length+"", Toast.LENGTH_LONG).show();
 
 //                                    }
-                                }
+
                             }
-                        });
+                      //  });
                     }
 
                     @Override
@@ -945,7 +1008,7 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
 
 
     private void startWrite(String serviceUUID, final String characterUUID, String writeData) {
-        if(imagebtn_allen) {
+
             Log.i(TAG, "startWrite");
             boolean suc = wholeActivity.bleManager.writeDevice(
                     serviceUUID,
@@ -972,7 +1035,7 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
                 wholeActivity.bleManager.stopListenCharacterCallback(ZZR_UUID_BLE_CHAR1.toString());
                 startNotify(serviceUUID.toString(), ZZR_UUID_BLE_CHAR1.toString());
             }
-        }
+
 
 
     }
@@ -998,9 +1061,24 @@ public class EnterFragment extends Fragment implements View.OnClickListener{
                 }
                 else
                 {
+                    int booltoint = switchled.isChecked()?1:0;
+                    if(fengshu<16)
+                    {
+                        startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(),
+                                "FE080"+booltoint+"0"+Integer.toHexString(fengshu)+"0000000000000002EF");
+                    }
+                    else
+                    {
+                        startWrite(ZZR_UUID_BLE_SEVICE.toString(), ZZR_UUID_BLE_CHAR.toString(),
+                                "FE080"+booltoint+Integer.toHexString(fengshu)+"0000000000000002EF");
+                    }
                     imagebtn_allsw.setBackgroundResource(R.drawable.sw_open);
                     imagebtn_allen =true;
+
                 }
+
+
+                break;
 
         }
 
